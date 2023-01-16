@@ -16,6 +16,6 @@ jobs:
           fetch-depth: 0
 
       # cspell: ignore kellyselden
-      - uses: kellyselden/move-semver-tags-action@v3
+      - uses: kellyselden/move-semver-tags-action@v4
         with:
           copy-annotations: true
