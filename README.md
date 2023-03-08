@@ -1,6 +1,7 @@
 # Ansible Lint for GitHub Action
 
-This action allows you to run `ansible-lint` with no additional options.
+This action allows you to run `ansible-lint` on your codebase without having
+to install it yourself.
 
 ## Usage
 
@@ -9,27 +10,36 @@ To use the action simply create an `ansible-lint.yml` (or choose custom `*.yml` 
 For example:
 
 ```yaml
-name: Ansible Lint # feel free to pick your own name
-
+name: ansible-lint
 on: [push, pull_request]
 
 jobs:
   build:
+    name: Ansible Lint # Naming the build is important to use it as a status check
     runs-on: ubuntu-latest
 
     steps:
       # Important: This sets up your GITHUB_WORKSPACE environment variable
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # needed for progressive mode to work
 
-      - name: Lint Ansible Playbook
+      - name: Run ansible-lint
         # replace `main` with any valid ref, or tags like `v6`
         uses: ansible/ansible-lint-action@main
         # optional:
-        with:
-          args: "" # args to pass to ansible-lint command
+        # with:
+        #   path: "playbooks/"  # <-- only one value is allowed
 ```
 
-> TIP: N.B. Use `ansible/ansible-lint-action@v4.1.0` or any other valid tag, or branch, or commit SHA instead of `v4.1.0` to pin the action to use a specific version.
+Due to limitations on how GitHub Actions are processing arguments, we do not
+plan to provide extra options. You will have to make use of [ansible-lint own configuration file](https://ansible-lint.readthedocs.io/en/latest/configuring/)
+for altering its behavior.
+
+If you still want custom arguments, you can still fork the action and modify
+its `action.yml` file.
+
+> TIP: N.B. Use `ansible/ansible-lint-action@v6` or any other valid tag, or branch, or commit SHA to pin the action to use a specific version.
 
 Alternatively, you can run the ansible lint only on certain branches:
 
